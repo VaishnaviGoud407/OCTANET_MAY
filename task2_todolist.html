@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<style>
+    body {
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3qGoGvbgmGGkDQvWW7yfwzLedaSsC7JxeSmkOcQ11MQ&s");
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: rgba(245, 245, 245, 0.938);
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3qGoGvbgmGGkDQvWW7yfwzLedaSsC7JxeSmkOcQ11MQ&s");
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    input[type="text"] {
+        width: calc(100% - 70px);
+        padding: 10px;
+        background-color: whitesmoke;
+        border: 2px solid #5a0b6e;
+        border-radius: 4px 0 0 4px;
+        font-size: 16px;
+    }
+    #addBtn {
+        width: 70px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 0 4px 4px 0;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .task-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: rgb(241, 207, 241);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .task-item input[type="checkbox"] {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    .task-item span {
+        flex-grow: 1;
+        color: #333;
+    }
+    .btn {
+        padding: 8px 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #00b3b3;
+    }
+    .btn-delete {
+        background-color: #dc3545;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>To-Do List</h1>
+    <div style="display: flex;">
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button id="addBtn">Add</button>
+    </div>
+    <div id="taskList"></div>
+    <button id="clearAllBtn" class="btn btn-delete">Clear All</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const taskInput = document.getElementById("taskInput");
+        const addBtn = document.getElementById("addBtn");
+        const taskList = document.getElementById("taskList");
+        const clearAllBtn = document.getElementById("clearAllBtn");
+
+        addBtn.addEventListener("click", function() {
+            const taskName = taskInput.value.trim();
+            if (taskName !== "") {
+                addTask(taskName);
+                taskInput.value = "";
+            }
+        });
+
+        taskInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                addBtn.click();
+            }
+        });
+
+        taskList.addEventListener("change", function(event) {
+            if (event.target.type === "checkbox") {
+                toggleTaskStatus(event.target);
+            }
+        });
+
+        taskList.addEventListener("click", function(event) {
+            if (event.target.classList.contains("btn-delete")) {
+                deleteTask(event.target.parentElement);
+            }
+        });
+
+        clearAllBtn.addEventListener("click", function() {
+            clearAllTasks();
+        });
+
+        function addTask(taskName) {
+            const taskItem = document.createElement("div");
+            taskItem.classList.add("task-item");
+            taskItem.innerHTML = `
+                <input type="checkbox">
+                <span>${taskName}</span>
+                <button class="btn btn-delete">Delete</button>
+            `;
+            taskList.appendChild(taskItem);
+        }
+
+        function toggleTaskStatus(checkbox) {
+            const taskName = checkbox.nextElementSibling.textContent;
+            const taskItem = checkbox.parentElement;
+            if (checkbox.checked) {
+                taskItem.style.textDecoration = "line-through";
+            } else {
+                taskItem.style.textDecoration = "none";
+            }
+        }
+
+        function deleteTask(taskItem) {
+            taskItem.remove();
+        }
+
+        function clearAllTasks() {
+            taskList.innerHTML = "";
+        }
+    });
+</script>
+</body>
+</html>
+
